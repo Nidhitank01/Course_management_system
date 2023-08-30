@@ -1,0 +1,201 @@
+######################################## online courser management system ##########################################
+import random
+import matplotlib.pyplot as plt
+class main:
+        def __init(self):
+            self.my_courses=open('my_course.txt','r')
+            self.my_courses.close()
+            self.unique=''
+        @classmethod
+        def user(self):
+                l=input("you want to login or signup:-")
+                if l=="login":
+                        self.user=input("enter your name:")
+                        self.pas=input("enter password:")
+                        f1=open("user.txt","r")
+                        for i in f1.readlines():
+                            if i.split("-")[0]==self.user and i.split("-")[1]==self.pas:
+                                self.menu()
+                elif l=="signup":
+                    self.user=input("enter your name:")
+                    self.pas=input("enter password:")
+                    w=self.user+"-"+self.pas
+                    f3=open("user.txt",'r')
+                    flag=0
+                    for i in f3.readlines():
+                            if i.strip("\n")==w:
+                                print("User already exits")
+                                flag=1
+                                break;
+                    if flag==1:
+                        self.start()
+                    else:
+                        f3.close()
+                        num=[0,1,2,3,4,5,6,7,8,9]
+                        self.unique=''
+                        for i in range(5):
+                            self.unique+=str(random.choice(num))
+                        print(self.unique)   
+                        f2=open("user.txt","a")
+                        self.my_courses=open('my_courses'+self.unique+'.txt','x')
+                        self.my_courses.close()
+                        w=self.user+"-"+self.pas+"-"+self.unique
+                        f2.write("\n"+w)
+                        f2.close()
+                        self.menu()
+        @classmethod
+        def menu(self):
+                choice=int(input('''
+                Enter further to proceed:
+                1:Availabel course
+                2:My course
+                3:Enroll course
+                4:completed course
+                5:current status of course
+                6:Exit'''))
+                if choice==1:
+                    availabel_courses()
+                elif choice==2:
+                    my_courses()
+                elif choice==3:
+                    enrollment()
+                elif choice==4:
+                    comp_course()
+                elif choice==5:
+                    current_status()
+                elif choice==6:
+                    print("Thank you!!!!")
+                       
+                else:
+                    print("Enter valid choice")
+                    self.menu()
+#-------------------------------------------------------------------------------------------------------------------------#
+class availabel_courses:
+    def __init__(self):
+        self.display_courses()
+        main.menu()
+    @classmethod
+    def display_courses(self):
+        print('hello')
+        with open('availabel_course.txt','r') as avail:
+            f1=avail.readlines()
+            print("---------------Availabel Courses--------------")
+            print('index  Course-name               Duration     Enrollment-Fees')
+            for i in f1:
+                print(i)
+#-------------------------------------------------------------------------------------------------------------------------#            
+class my_courses(main):
+    def __init__(self):
+        super().__init__()
+        self.Enrolled_Course()
+    def Enrolled_Course(self):
+        with open('my_courses'+self.unique+'.txt','r') as my:
+            f2=my.readlines()
+            if f2==[]:
+                print("You have not enrolled any course.")
+            else:
+                print("---------------Your Courses--------------")
+                print('index  Course-name               Duration     Enrollment-Fees')
+                for i in f2:
+                    print(i)
+            main.menu()
+#--------------------------------------------------------------------------------------------------------------------------#            
+class  enrollment(main):
+    def __init__(self):
+        super().__init__()
+        self.enroll()
+        self.display()
+        self.index=0
+        self.new=[]
+    def enroll(self):
+        availabel_courses.display_courses()
+        with open('availabel_course.txt','r') as en,open('my_courses'+self.unique+'.txt','r') as my:
+            print("--------------------------------------------")
+            self.index=input("Enter Index of course Which is you want to Enroll : ")
+            f3=en.readlines()
+            f4=[]
+            for i in f3:
+                f4.append(i.split(' '))
+            for k in f4:
+                if k[0]==self.index:
+                    self.new=k
+            if self.new==[]:
+                print('Entered index does not exist!!!')
+                again1=input("Enter 'y' for enroll furter:")
+                if again1.lower()!='y':
+                    main.menu()
+                else:
+                    self.enroll()
+            new_enroll=''
+            for j in self.new:
+                if j=='':
+                    new_enroll+=' '
+                else:
+                    new_enroll+=j
+            print(new_enroll)
+            f5=my.readlines()
+            f6=[]
+            for l in f5:
+                f6.append(l.split(' '))
+            for m in f6:
+                if m[0]==self.index:
+                    print('Course has been enrolled already.')
+                    again=input("Enter 'y' for enroll furter:")
+                    if again.lower()!='y':
+                        main.menu()
+                    else:
+                        self.enroll()
+            my.close()
+            m=open('my_courses'+self.unique+'.txt','a')
+            m.write('\n'+new_enroll)
+    def display(self):
+            print("Name: "+self.user)
+            print("Courseid:",self.index)
+            print("Fees:"+self.new[-1])
+            print("Course enroll successfully!!")
+            main.menu()
+#-------------------------------------------------------------------------------------------------------------------------#
+class comp_course:
+    def __init__(self):
+        self.complete()
+        main.menu()
+    def complete(self):
+        with open('compeleted_coureses.txt','r') as f2:
+            f=f2.readlines()
+            print("-------This Courses are completed.-------")
+            for i in f:
+                print(i) 
+#-------------------------------------------------------------------------------------------------------------------------#
+class current_status(comp_course,my_courses,main):
+    def __init__(self):
+        super(main,self).__init__()
+        self.status()
+        main.menu()
+    def status(self):
+        f2=open('compeleted_coureses.txt','r')
+        f=open('my_courses'+self.unique+'.txt','r')
+        l1=f.readlines()
+        l2=[]
+        l3=[]
+        for i in l1:
+            l2.append(i.split(' '))
+        for j in l2:
+            for k in j:
+                if k=='':
+                    continue
+                else:
+                    l3.append(k)
+        x=l3[1::4]
+        print(x)
+        y=[]
+        pr=[0,10,20,30,40,50,60,70,80,90]
+        for l in range(len(x)):
+            y.append(random.choice(pr))
+        print(y)
+        plt.bar(x,y,color='green')
+        plt.xticks(x,rotation=30)
+        plt.ylabel("Percentage of completetion")
+        plt.xlabel('Course name')
+        plt.title("Current Status of course completetion",fontsize=6)
+        plt.show()    
+    

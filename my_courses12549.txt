@@ -1,0 +1,4 @@
+c3    basic-c-course             8_week     800_ruppees 
+c4    10th-all-subject-course    12_week    3000_ruppees 
+
+c10  computer-networking       5_week    250_ruppees

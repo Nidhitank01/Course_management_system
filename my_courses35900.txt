@@ -1,0 +1,3 @@
+c3    basic-c-course             8_week     800_ruppees 
+c4    10th-all-subject-course    12_week    3000_ruppees 
+c6   data-structure            8_week    500_ruppees
